@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    let variable = GetPrs()
+    let getPrDetails = GetPrs()
+    var prList = [prDetails]()
+
 
     init() {
-        variable.getPrs()
+        prList = getPrDetails.getPrs()
     }
 
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        List(0..<5) { item in
+            Text(verbatim: "Hello, World!")
+        }
     }
 }
 

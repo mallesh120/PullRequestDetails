@@ -9,7 +9,8 @@ struct prDetails: Identifiable {
 }
 
 class GetPrs {
-    func getPrs() {
+    func getPrs() -> [prDetails] {
+        var listArray = [prDetails]()
         let semaphore = DispatchSemaphore (value: 0)
 
         var request = URLRequest(url: URL(string: "https://api.github.com/repos/mallesh120/PullRequestDetails/pulls")!,timeoutInterval: Double.infinity)
@@ -29,7 +30,7 @@ class GetPrs {
                     for pr in prListJSON {
                         let commitDetails = pr["head"] as! [String: Any]
                         let userDetails = commitDetails["user"] as! [String: Any]
-                        print(prDetails(userLogin: userDetails["login"] as! String, merge_commit_sha: commitDetails["sha"] as! String, title: pr["title"] as! String))
+                        listArray.append(prDetails(userLogin: userDetails["login"] as! String, merge_commit_sha: commitDetails["sha"] as! String, title: pr["title"] as! String))
                     }
                 }
                 semaphore.signal()
@@ -37,6 +38,7 @@ class GetPrs {
         }
         task.resume()
         semaphore.wait()
+        return listArray
     }
 }
 
