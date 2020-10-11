@@ -17,8 +17,19 @@ struct ContentView: View {
     }
 
     var body: some View {
-        List(0..<5) { item in
-            Text(verbatim: "Hello, World!")
+        List(prList) { pr in
+            VStack(alignment: .leading) {
+                Text(verbatim: "User: " + pr.userLogin)
+                    .font(.title)
+                    .fontWeight(.regular)
+                    .multilineTextAlignment(.leading)
+                Text(verbatim: "Commit: " +  pr.merge_commit_sha)
+                    .font(.body)
+                    .fontWeight(.regular)
+                Text(verbatim: "Commit Message: " + pr.title)
+                    .font(.body)
+                    .fontWeight(.regular)
+            }
         }
     }
 }
