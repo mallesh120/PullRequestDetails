@@ -11,12 +11,13 @@ struct ContentView: View {
     let getPrDetails = GetPrs()
     var prList = [prDetails]()
 
-
+    // Call the method once the app is initialized
     init() {
         prList = getPrDetails.getPrs()
     }
 
     var body: some View {
+        // Table View with the required details
         List(prList) { pr in
             VStack(alignment: .leading) {
                 Text(verbatim: "User: " + pr.userLogin)
