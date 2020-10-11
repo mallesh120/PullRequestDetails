@@ -1,12 +1,20 @@
 import Foundation
 
+struct prDetails: Identifiable {
+    var id = UUID()
+
+    let userLogin: String
+    let merge_commit_sha: String
+    let title: String
+}
+
 class GetPrs {
     func getPrs() {
         let semaphore = DispatchSemaphore (value: 0)
 
         var request = URLRequest(url: URL(string: "https://api.github.com/repos/mallesh120/PullRequestDetails/pulls")!,timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("token e2be83a181d811a143ea9dcf85db460a91b5943a", forHTTPHeaderField: "Authorization")
+        request.addValue("token ba19a55d7c7f262e6c9092c11c31d413b8488a86", forHTTPHeaderField: "Authorization")
 
         request.httpMethod = "GET"
 
@@ -16,15 +24,12 @@ class GetPrs {
             return
           }
             do {
-                if let jsonArray = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Dictionary<String,Any>]
+                if let prListJSON = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Dictionary<String,Any>]
                 {
-                    for i in jsonArray {
-                        let x = i["head"] as! [String: Any]
-                        let y = x["user"] as! [String: Any]
-
-                        print(i["title"]!)
-                        print(x["sha"]!)
-                        print(y["login"]!)
+                    for pr in prListJSON {
+                        let commitDetails = pr["head"] as! [String: Any]
+                        let userDetails = commitDetails["user"] as! [String: Any]
+                        print(prDetails(userLogin: userDetails["login"] as! String, merge_commit_sha: commitDetails["sha"] as! String, title: pr["title"] as! String))
                     }
                 }
                 semaphore.signal()
